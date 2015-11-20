@@ -14,33 +14,33 @@
     <div class="container">
       <div class="row">
         <div class="col-md-6">
-          <h2 class="players">Player 1</h2>
+          <h2 class="players" id="p1_name">Player 1</h2>
           <div>
-            <img src="player1.jpg" alt="">
+            <img src="#" alt="" id="p1_img">
           </div>
-          <div class="health">
+          <div class="health" id="p1_health">
             100%
           </div>
           <ul class="attributes"><strong>Attributes</strong>
-            <li>Weapon</li>
-            <li>Armor</li>
-            <li>Special ability</li>
-            <li>Coding skill</li>
+            <li id="p1_weapon">Weapon</li>
+            <li id="p1_armor">Armor</li>
+            <li id="p1_ability">Special ability</li>
+            <li id="p1_coding">Coding skill</li>
           </ul>
         </div>
         <div class="col-md-6">
-          <h2 class="players">Player 2</h2>
+          <h2 class="players" id="p2_name">Player 2</h2>
           <div>
-            <img src="player2.jpg" alt="">
+            <img src="#" alt="" id="p2_img">
           </div>
-          <div class="health">
+          <div class="health" id="p2_health">
             100%
           </div>
           <ul class="attributes"><strong>Attributes</strong>
-            <li>Weapon</li>
-            <li>Armor</li>
-            <li>Special ability</li>
-            <li>Coding skill</li>
+            <li id="p2_weapon">Weapon</li>
+            <li id="p2_armor">Armor</li>
+            <li id="p2_ability">Special ability</li>
+            <li id="p2_coding">Coding skill</li>
           </ul>
         </div>
       </div>
@@ -53,5 +53,43 @@
     <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
     <script src="public/javascripts/application.js"></script>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io.connect();
+  
+      socket.on('player1_login', function(player) {
+        document.getElementById('p1_name').innerHTML = player.name;
+        document.getElementById('p1_img').src = player.picture;
+      });
+
+      socket.on('player2_login', function(player) {
+        document.getElementById('p2_name').innerHTML = player.name;
+        document.getElementById('p2_img').src = player.picture;
+      });
+
+      socket.on('player1_items', function(player) {
+        document.getElementById('p1_weapon').innerHTML = player.weapon.name;
+        document.getElementById('p1_armor').innerHTML = player.armor.name;
+        document.getElementById('p1_ability').innerHTML = player.ability;
+        document.getElementById('p1_coding').innerHTML = player.coding;
+      });
+
+      socket.on('player2_items', function(player) {
+        document.getElementById('p2_weapon').innerHTML = player.weapon.name;
+        document.getElementById('p2_armor').innerHTML = player.armor.name;
+        document.getElementById('p2_ability').innerHTML = player.ability;
+        document.getElementById('p2_coding').innerHTML = player.coding;
+      });
+
+      socket.on('player1_damage', function(player) {
+        document.getElementById('p1_health').innerHTML = player.hp + '%';
+      });
+
+      socket.on('player2_damage', function(player) {
+        document.getElementById('p2_health').innerHTML = player.hp + '%';
+      });
+
+    </script>
   </body>
 </html>

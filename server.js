@@ -1,30 +1,24 @@
-// Running on your computer.
-
 var express = require('express');
-var http = require('http');
 var fs = require('fs');
-var server = http.createServer();
-var app = express();
+var socketio = require('socket.io');
 
-server.on('request', app);
+var app = express();//????????
 
-server.listen(3001, function () {
- console.log('Server on.');
+var server = app.listen(8000, function() {
+  console.log( "SERVER READY ON PORT 80" );
+});
+var io = socketio.listen( server );
+
+app.get('/', function( req, res, next ) {
+  fs.readFile('index.html', 'utf8', function( err, page ) {
+    res.type('html').send( page );
+  });
 });
 
-app.post('/upload-pic', function (req, res, next) {
-
-    console.log('Request received');
-
-    var imageData = new Buffer(0);
-
-    req.on('data', function (chunk) {
-        imageData = Buffer.concat([imageData, chunk]);
-    });
-
-    req.on('end', function () {
-       // Full image ready.
-        fs.writeFile('./'+ Date.now().toString() + '.jpg', imageData);
-    });
-
+app.get('/style/style.css', function( req, res, next ) {
+  fs.readFile('style/style.css', 'utf8', function( err, css ) {
+    res.type('css').send( css );
+  })
 });
+
+module.exports = io;
