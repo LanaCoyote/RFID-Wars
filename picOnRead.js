@@ -35,6 +35,7 @@ function takePic () {
         process.sendfile(name, image);
         players[playerNum-1] = new player( "Player " + playerNum, name );
         console.log('done.');
+        post( players[playerNum-1], "send_player"+playerNum+"_items" );
         // Turn the camera off to end the script
         if (playerNum === 3) {camera.disable();}
       }
@@ -46,11 +47,31 @@ function takePic () {
 
 }
 
-var io = require('./server');
-var message = require('./messages')(io);
+var http = require('http');
+var qs = requre('querystring');
 
 var players = [];
 var p1turn = true;
+
+function post( player, message ) {
+  var data = querystring.stringify({
+    player: player
+  });
+  var options = {
+    host: 
+    port: 8000,
+    path: '/' + message,
+    method: "POST",
+    headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+                        'Content-Length': Buffer.byteLength(data)
+                              }
+  };
+
+  var req = http.request( options, function() {});
+  req.write( data );
+  req.end();
+}
 
 rfid.on('ready', function () {
   rfid.on('data', function(card){
@@ -61,22 +82,22 @@ rfid.on('ready', function () {
 
       if ( players[0].weapon === null ) {
         players[0].setItems( uid );
-        message.send_player1_items( players[0] );
+        post( players[0], "send_player1_items" );
       } else {
         var damage = players[0].getDamageFromDiceroll( uid );
         players[1].dealDamage( damage );
-        message.send_player2_damage( players[1] );
+        post( players[0], "send_player2_damage" );
       }
 
     } else {
 
       if ( players[1].weapon === null ) {
         players[1].setItems( uid );
-        message.send_player2_items( players[1] );
+        post( players[1], "send_player2_items" );
       } else {
         var damage = players[1].getDamageFromDiceroll( uid );
         players[0].dealDamage( damage );
-        message.send_player1_damage( players[0] );
+        post( players[1], "send_player1_damage" );
       }
 
     }
