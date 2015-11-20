@@ -33,6 +33,7 @@ function takePic () {
         console.log(playerNum)
         console.log('Picture saving as', name, '...');
         process.sendfile(name, image);
+        players[playerNum-1] = new player( "Player " + playerNum, name );
         console.log('done.');
         // Turn the camera off to end the script
         if (playerNum === 3) {camera.disable();}
@@ -45,12 +46,45 @@ function takePic () {
 
 }
 
+var io = require('./server');
+var message = require('./messages')(io);
+
+var players = [];
+var p1turn = true;
+
 rfid.on('ready', function () {
   rfid.on('data', function(card){
     if (playerNum < 3 ) takePic();
     var uid = card.uid.toString('hex');
+    
+    if ( p1turn ) {
 
-    player.setUid(uid);
+      if ( players[0].weapon === null ) {
+        players[0].setItems( uid );
+        message.send_player1_items( players[0] );
+      } else {
+        var damage = players[0].getDamageFromDiceroll( uid );
+        players[1].dealDamage( damage );
+        message.send_player2_damage( players[1] );
+      }
+
+    } else {
+
+      if ( players[1].weapon === null ) {
+        players[1].setItems( uid );
+        message.send_player2_items( players[1] );
+      } else {
+        var damage = players[1].getDamageFromDiceroll( uid );
+        players[0].dealDamage( damage );
+        message.send_player1_damage( players[0] );
+      }
+
+    }
+
+    p1turn = !p1turn;
+
+    //player.setUid(uid);
+
 
   });
 });
