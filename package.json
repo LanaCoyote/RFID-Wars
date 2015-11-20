@@ -1,0 +1,25 @@
+{
+  "name": "rfid-wars",
+  "version": "1.0.0",
+  "description": "",
+  "main": "message.js",
+  "dependencies": {
+    "express": "^4.13.3",
+    "socket.io": "^1.3.7"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lancey6/RFID-Wars.git"
+  },
+  "author": "David Reeve <david.thomas.reeve@gmail.com> (http://lancey.space)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Lancey6/RFID-Wars/issues"
+  },
+  "homepage": "https://github.com/Lancey6/RFID-Wars#readme"
+}
