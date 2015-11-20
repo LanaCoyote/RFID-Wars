@@ -1,4 +1,8 @@
 
+function setUID(uid) {
+  
+}
+
 function Player( picture, name ) {
   this.picture = picture;
   this.name = name;
